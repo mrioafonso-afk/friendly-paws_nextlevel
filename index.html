@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friendly Paws — Premium Dog Walking & Pet Care · Zürich</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* ── Palette ──────────────────────────────────── */
+      --beige:     #F5EDE0;     /* main background */
+      --sand:      #E8D9C4;     /* slightly deeper beige */
+      --sand-dark: #D9C6AB;     /* borders, dividers */
+      --cream:     #FBF7F0;     /* card backgrounds */
+
+      --terra:     #C06B44;     /* terracotta – primary accent */
+      --terra-lt:  #D98A68;     /* lighter terracotta */
+      --terra-pale:#F2DCCF;     /* very pale terracotta tint */
+
+      --green:     #7AAD85;     /* pastel sage green */
+      --green-lt:  #A3C9AB;     /* lighter green */
+      --green-pale:#D8EBD9;     /* pale green tint */
+
+      --blue:      #7898B5;     /* dusty blue */
+      --blue-lt:   #A0BACE;     /* lighter blue */
+      --blue-pale: #D6E5EF;     /* pale blue tint */
+
+      --ink:       #2E2218;     /* darkest text */
+      --ink2:      rgba(46,34,24,0.58); /* secondary text */
+      --ink3:      rgba(46,34,24,0.35); /* muted */
+
+      --glass:     rgba(255,255,255,0.55);
+      --glass-border: rgba(46,34,24,0.1);
+
+      --radius:    20px;
+      --radius-btn:999px;
+
+      --shadow-sm: 0 4px 16px rgba(46,34,24,0.08);
+      --shadow-md: 0 12px 40px rgba(46,34,24,0.12);
+      --shadow-lg: 0 32px 64px rgba(46,34,24,0.14);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--beige);
+      color: var(--ink);
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── Custom cursor ────────────────────────────── */
+    #cursor {
+      position: fixed; width: 10px; height: 10px;
+      background: var(--terra);
+      border-radius: 50%; pointer-events: none;
+      z-index: 9999; transition: transform 0.15s ease;
+      transform: translate(-50%,-50%);
+    }
+    #cursor-ring {
+      position: fixed; width: 34px; height: 34px;
+      border: 1.5px solid rgba(192,107,68,0.5);
+      border-radius: 50%; pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.35s ease, width 0.3s, height 0.3s, border-color 0.3s;
+      transform: translate(-50%,-50%);
+    }
+
+    /* ── Progress bar ─────────────────────────────── */
+    #progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px;
+      background: linear-gradient(90deg, var(--terra), var(--green), var(--blue));
+      width: 0%; z-index: 1001;
+      transition: width 0.08s linear;
+      box-shadow: 0 0 8px rgba(192,107,68,0.4);
+    }
+
+    /* ── Navbar ───────────────────────────────────── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 1.1rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(245,237,224,0.85);
+      backdrop-filter: blur(22px) saturate(160%);
+      border-bottom: 1px solid rgba(46,34,24,0.07);
+      transition: padding 0.3s, box-shadow 0.3s;
+    }
+    #navbar.scrolled {
+      padding: 0.75rem 2.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; font-weight: 900;
+      color: var(--terra); text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      color: var(--ink2); text-decoration: none;
+      font-size: 0.88rem; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-book {
+      padding: 9px 24px;
+      background: var(--terra);
+      border-radius: var(--radius-btn);
+      color: #fff; font-weight: 700; font-size: 0.85rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .nav-book:hover {
+      background: var(--terra-lt);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(192,107,68,0.35);
+    }
+
+    /* ── Nav dots ─────────────────────────────────── */
+    #nav-dots {
+      position: fixed; right: 26px; top: 50%;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 13px;
+      z-index: 999;
+    }
+    .ndot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--sand-dark); cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+    }
+    .ndot::after {
+      content: attr(data-label);
+      position: absolute; right: 18px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.72rem; white-space: nowrap;
+      color: var(--ink2); opacity: 0;
+      pointer-events: none; transition: opacity 0.2s;
+    }
+    .ndot:hover::after { opacity: 1; }
+    .ndot.active {
+      background: var(--terra);
+      transform: scale(1.6);
+      box-shadow: 0 0 8px rgba(192,107,68,0.5);
+    }
+
+    /* ── Sections base ────────────────────────────── */
+    section { position: relative; }
+    .sec {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 8rem 0;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2.5rem; width: 100%; }
+
+    .sec-tag {
+      display: inline-block;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--terra); margin-bottom: 1rem;
+    }
+    .sec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4.5vw, 3.6rem);
+      font-weight: 900; letter-spacing: -0.02em;
+      line-height: 1.08; margin-bottom: 1.1rem;
+      color: var(--ink);
+    }
+    .sec-desc {
+      color: var(--ink2); font-size: 1.08rem;
+      line-height: 1.68; max-width: 560px;
+    }
+    .sec-head { margin-bottom: 4rem; }
+    .sec-head.center { text-align: center; }
+    .sec-head.center .sec-desc { margin: 0 auto; }
+
+    /* ── HERO ─────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(160deg, #FBF6EE 0%, #F0E5D2 50%, #E8D9C4 100%);
+    }
+    #hero-canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative; z-index: 10;
+      text-align: center; padding: 9rem 2rem 6rem;
+      max-width: 920px; margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 18px;
+      background: rgba(192,107,68,0.1);
+      border: 1px solid rgba(192,107,68,0.28);
+      border-radius: var(--radius-btn);
+      font-size: 0.78rem; font-weight: 600;
+      color: var(--terra); letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0; transform: translateY(16px);
+      animation: fadeUp 0.7s 0.3s forwards;
+    }
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(4.5rem, 11vw, 10rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 0.93;
+      margin-bottom: 1.6rem;
+      color: var(--ink);
+    }
+    .hero-title .word {
+      display: inline-block;
+      opacity: 0; transform: translateY(60px) rotate(1.5deg);
+      animation: wordIn 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    .hero-title .w1 { animation-delay: 0.5s; }
+    .hero-title .w2 { animation-delay: 0.68s; color: var(--terra); }
+    .hero-title .br { display: block; }
+    @keyframes wordIn { to { opacity:1; transform:translateY(0) rotate(0deg); } }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.2vw, 1.3rem);
+      color: var(--ink2); max-width: 580px;
+      margin: 0 auto 2.8rem; line-height: 1.68;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp 0.8s 1s forwards;
+    }
+    .hero-btns {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp 0.8s 1.15s forwards;
+    }
+    .btn-pri {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 16px 38px;
+      background: var(--terra);
+      border-radius: var(--radius-btn); color: #fff;
+      font-weight: 700; font-size: 1rem; text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      letter-spacing: -0.01em;
+    }
+    .btn-pri:hover {
+      background: var(--terra-lt);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 44px rgba(192,107,68,0.35);
+    }
+    .btn-sec {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 16px 38px;
+      background: rgba(255,255,255,0.6);
+      border: 1.5px solid var(--sand-dark);
+      border-radius: var(--radius-btn); color: var(--ink);
+      font-weight: 600; font-size: 1rem; text-decoration: none;
+      backdrop-filter: blur(12px);
+      transition: all 0.2s;
+    }
+    .btn-sec:hover {
+      background: rgba(255,255,255,0.85);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-sm);
+    }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      color: var(--ink3); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+      opacity: 0; animation: fadeUp 1s 1.5s forwards;
+    }
+    .scroll-pill {
+      width: 22px; height: 38px;
+      border: 1.5px solid var(--sand-dark);
+      border-radius: 99px;
+      display: flex; justify-content: center; padding-top: 6px;
+    }
+    .scroll-dot {
+      width: 4px; height: 8px;
+      background: var(--terra); border-radius: 99px;
+      animation: scrollBounce 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollBounce {
+      0%,100% { transform:translateY(0); opacity:1; }
+      60% { transform:translateY(10px); opacity:0.3; }
+    }
+
+    /* ── SERVICES ─────────────────────────────────── */
+    #services {
+      background: linear-gradient(180deg, #F0E5D2 0%, #F5EDE0 100%);
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.4rem;
+    }
+    .s-card {
+      background: var(--cream);
+      border: 1.5px solid var(--sand-dark);
+      border-radius: var(--radius);
+      padding: 2.2rem 2rem;
+      box-shadow: var(--shadow-sm);
+      position: relative; overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s, border-color 0.3s;
+      will-change: transform;
+    }
+    .s-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      opacity: 0; transition: opacity 0.35s;
+    }
+    .s-card.color-terra::before { background: linear-gradient(135deg, var(--terra-pale) 0%, transparent 60%); }
+    .s-card.color-green::before { background: linear-gradient(135deg, var(--green-pale) 0%, transparent 60%); }
+    .s-card.color-blue::before  { background: linear-gradient(135deg, var(--blue-pale) 0%, transparent 60%); }
+    .s-card.color-sand::before  { background: linear-gradient(135deg, var(--sand) 0%, transparent 60%); }
+
+    .s-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--terra-lt); }
+    .s-card:hover::before { opacity: 1; }
+
+    .s-card .accent-bar {
+      width: 36px; height: 3px; border-radius: 99px;
+      margin-bottom: 1.5rem;
+    }
+    .s-card.color-terra .accent-bar { background: var(--terra); }
+    .s-card.color-green .accent-bar { background: var(--green); }
+    .s-card.color-blue  .accent-bar { background: var(--blue); }
+    .s-card.color-sand  .accent-bar { background: var(--sand-dark); }
+
+    .s-card .icon { font-size: 2.4rem; margin-bottom: 1.1rem; display: block; }
+    .s-card h3 { font-size: 1.18rem; font-weight: 750; margin-bottom: 0.7rem; color: var(--ink); }
+    .s-card p { color: var(--ink2); line-height: 1.62; font-size: 0.92rem; }
+    .s-card .price {
+      margin-top: 1.5rem; font-size: 0.88rem;
+      font-weight: 700;
+    }
+    .s-card.color-terra .price { color: var(--terra); }
+    .s-card.color-green .price { color: var(--green); }
+    .s-card.color-blue  .price { color: var(--blue); }
+    .s-card.color-sand  .price { color: var(--ink2); }
+
+    /* ── STATS ────────────────────────────────────── */
+    #stats {
+      background: var(--green-pale);
+      background-image: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(122,173,133,0.18) 0%, transparent 70%);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.6rem;
+    }
+    .stat-card {
+      text-align: center; padding: 3rem 1.5rem;
+      background: rgba(255,255,255,0.7);
+      border: 1.5px solid rgba(122,173,133,0.3);
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-sm);
+      position: relative; overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .stat-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 50%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+    }
+    .stat-n {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 900; line-height: 1;
+      color: var(--terra);
+      display: block; margin-bottom: 0.6rem;
+    }
+    .stat-l { color: var(--ink2); font-size: 0.92rem; font-weight: 500; }
+
+    /* ── HOW IT WORKS ─────────────────────────────── */
+    #how {
+      background: linear-gradient(180deg, var(--beige) 0%, var(--blue-pale) 100%);
+    }
+    .steps-wrap {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2.5rem; position: relative;
+    }
+    .steps-wrap::before {
+      content: '';
+      position: absolute; top: 2rem; left: 8%; right: 8%; height: 1.5px;
+      background: linear-gradient(90deg, transparent, var(--sand-dark) 20%, var(--sand-dark) 80%, transparent);
+    }
+    .step { display: flex; flex-direction: column; }
+    .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem; font-weight: 900;
+      color: rgba(192,107,68,0.12); line-height: 1;
+      margin-bottom: 0.8rem;
+    }
+    .step-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .step h3 { font-size: 1.12rem; font-weight: 750; margin-bottom: 0.65rem; color: var(--ink); }
+    .step p { color: var(--ink2); line-height: 1.65; font-size: 0.92rem; }
+
+    /* ── TESTIMONIALS ─────────────────────────────── */
+    #testimonials {
+      background: linear-gradient(180deg, var(--blue-pale) 0%, var(--sand) 100%);
+    }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.4rem;
+    }
+    .testi-card {
+      background: rgba(255,255,255,0.72);
+      border: 1.5px solid rgba(46,34,24,0.08);
+      border-radius: var(--radius);
+      padding: 2rem;
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .testi-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .stars { color: var(--terra); letter-spacing: 3px; font-size: 1rem; margin-bottom: 1.1rem; }
+    .testi-text {
+      color: rgba(46,34,24,0.78); line-height: 1.72;
+      font-size: 0.94rem; margin-bottom: 1.5rem; font-style: italic;
+    }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .t-avatar {
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--terra-pale);
+      border: 1.5px solid rgba(192,107,68,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .t-name { font-weight: 700; font-size: 0.92rem; color: var(--ink); }
+    .t-sub { font-size: 0.78rem; color: var(--ink2); margin-top: 2px; }
+
+    /* ── CTA ──────────────────────────────────────── */
+    #cta {
+      min-height: 80vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 10rem 0;
+      background: var(--terra);
+      background-image: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(255,255,255,0.12) 0%, transparent 65%);
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    #cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .cta-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+    .cta-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 6vw, 6rem);
+      font-weight: 900; letter-spacing: -0.03em;
+      line-height: 1; margin-bottom: 1.4rem;
+      color: #fff;
+    }
+    .cta-sub {
+      color: rgba(255,255,255,0.78); font-size: 1.12rem;
+      line-height: 1.65; margin: 0 auto 2.8rem; max-width: 500px;
+    }
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 18px 52px;
+      background: #fff;
+      border-radius: var(--radius-btn);
+      color: var(--terra); font-weight: 800; font-size: 1.05rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.2);
+    }
+    .cta-note {
+      margin-top: 1.6rem;
+      color: rgba(255,255,255,0.6); font-size: 0.84rem;
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .cta-note span::before { content: '✓ '; color: rgba(255,255,255,0.9); }
+
+    /* ── FOOTER ───────────────────────────────────── */
+    footer {
+      padding: 3.5rem 0;
+      background: var(--sand);
+      border-top: 1.5px solid var(--sand-dark);
+    }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; font-weight: 900; color: var(--terra);
+    }
+    .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .footer-links a { color: var(--ink2); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--terra); }
+    .footer-copy { color: var(--ink3); font-size: 0.8rem; }
+
+    /* ── Animate-in ───────────────────────────────── */
+    .ai {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.75s cubic-bezier(0.16,1,0.3,1);
+    }
+    .ai.vis { opacity: 1; transform: none; }
+    .ai.delay-1 { transition-delay: 0.1s; }
+    .ai.delay-2 { transition-delay: 0.2s; }
+    .ai.delay-3 { transition-delay: 0.3s; }
+    .ai.delay-4 { transition-delay: 0.4s; }
+
+    /* ── Grain ────────────────────────────────────── */
+    #grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9990;
+      opacity: 0.022;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      animation: grainShift 0.3s steps(1) infinite;
+    }
+    @keyframes grainShift {
+      0%  { transform: translate(0,0); }
+      25% { transform: translate(-2px,1px); }
+      50% { transform: translate(2px,-1px); }
+      75% { transform: translate(-1px,2px); }
+    }
+
+    /* ── Responsive ───────────────────────────────── */
+    @media(max-width:768px){
+      .nav-links { display: none; }
+      #nav-dots  { display: none; }
+      body { cursor: auto; }
+      #cursor, #cursor-ring { display: none; }
+      .steps-wrap::before { display: none; }
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="grain"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress-bar"></div>
+
+<!-- ── Navbar ─────────────────────────────────────── -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">🐾 Friendly Paws</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#stats">Impact</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+  </ul>
+  <a href="#cta" class="nav-book">Book a Walk 🐕</a>
+</nav>
+
+<!-- ── Nav dots ───────────────────────────────────── -->
+<nav id="nav-dots">
+  <div class="ndot active" data-target="hero"         data-label="Home"></div>
+  <div class="ndot"        data-target="services"     data-label="Services"></div>
+  <div class="ndot"        data-target="stats"        data-label="Impact"></div>
+  <div class="ndot"        data-target="how"          data-label="Process"></div>
+  <div class="ndot"        data-target="testimonials" data-label="Reviews"></div>
+  <div class="ndot"        data-target="cta"          data-label="Book Now"></div>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">🐾 Zürich's Premier Pet Care Service</div>
+    <h1 class="hero-title">
+      <span class="word w1">Friendly</span>
+      <span class="br"></span>
+      <span class="word w2">Paws</span>
+    </h1>
+    <p class="hero-sub">
+      Premium dog walking &amp; pet care delivered with love.<br>
+      Trusted by hundreds of happy pets and their families.
+    </p>
+    <div class="hero-btns">
+      <a href="#cta"      class="btn-pri">Book a Walk 🐕</a>
+      <a href="#services" class="btn-sec">Explore Services →</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-pill"><div class="scroll-dot"></div></div>
+  </div>
+</section>
+
+<!-- ══════════════ SERVICES ══════════════ -->
+<section id="services" class="sec">
+  <div class="container">
+    <div class="sec-head center">
+      <span class="sec-tag">What We Offer</span>
+      <h2 class="sec-title ai">Everything Your Pet Needs</h2>
+      <p class="sec-desc ai delay-1">From daily walks to overnight stays, we cover every aspect of professional, loving pet care.</p>
+    </div>
+    <div class="services-grid">
+      <div class="s-card color-terra ai">
+        <div class="accent-bar"></div>
+        <span class="icon">🦮</span>
+        <h3>Daily Dog Walks</h3>
+        <p>30 or 60-minute walks tailored to your dog's energy level. GPS-tracked with real-time photo updates sent to your phone.</p>
+        <div class="price">From CHF 25 / walk</div>
+      </div>
+      <div class="s-card color-green ai delay-1">
+        <div class="accent-bar"></div>
+        <span class="icon">🏠</span>
+        <h3>In-Home Pet Sitting</h3>
+        <p>We visit your home so your pet stays comfortable in their own environment — feeding, playtime, and all the cuddles they deserve.</p>
+        <div class="price">From CHF 20 / visit</div>
+      </div>
+      <div class="s-card color-blue ai delay-2">
+        <div class="accent-bar"></div>
+        <span class="icon">🌙</span>
+        <h3>Overnight Stays</h3>
+        <p>Our carers stay at your home overnight, ensuring your pet never feels alone. Perfect for business trips or late nights out.</p>
+        <div class="price">From CHF 65 / night</div>
+      </div>
+      <div class="s-card color-sand ai delay-3">
+        <div class="accent-bar"></div>
+        <span class="icon">🐣</span>
+        <h3>Puppy Care</h3>
+        <p>Specialised care for puppies — socialisation, training reinforcement, and extra-frequent short visits to keep them happy.</p>
+        <div class="price">From CHF 30 / visit</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ STATS ══════════════ -->
+<section id="stats" class="sec">
+  <div class="container">
+    <div class="sec-head center">
+      <span class="sec-tag">By the Numbers</span>
+      <h2 class="sec-title ai">Zürich's Most Loved Pet Carers</h2>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card ai">
+        <span class="stat-n" data-target="500"  data-suffix="+">0</span>
+        <span class="stat-l">Happy Pets Served</span>
+      </div>
+      <div class="stat-card ai delay-1">
+        <span class="stat-n" data-target="12000" data-suffix="+">0</span>
+        <span class="stat-l">Walks Completed</span>
+      </div>
+      <div class="stat-card ai delay-2">
+        <span class="stat-n" data-target="4.9" data-decimal="1" data-suffix="★">0</span>
+        <span class="stat-l">Average Star Rating</span>
+      </div>
+      <div class="stat-card ai delay-3">
+        <span class="stat-n" data-target="5" data-suffix="+ yrs">0</span>
+        <span class="stat-l">Years of Experience</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
+<section id="how" class="sec">
+  <div class="container">
+    <div class="sec-head center">
+      <span class="sec-tag">Simple Process</span>
+      <h2 class="sec-title ai">Getting Started is Easy</h2>
+      <p class="sec-desc ai delay-1">Four simple steps between you and a happy, well-cared-for pet.</p>
+    </div>
+    <div class="steps-wrap">
+      <div class="step ai">
+        <div class="step-num">01</div>
+        <span class="step-icon">📱</span>
+        <h3>Book Online</h3>
+        <p>Choose your service, pick a time, and book in under 2 minutes — no fuss, no phone calls needed.</p>
+      </div>
+      <div class="step ai delay-1">
+        <div class="step-num">02</div>
+        <span class="step-icon">🤝</span>
+        <h3>Meet &amp; Greet</h3>
+        <p>We meet your pet beforehand so everyone feels at ease. We learn their quirks, favourite routes, and what makes them wag.</p>
+      </div>
+      <div class="step ai delay-2">
+        <div class="step-num">03</div>
+        <span class="step-icon">❤️</span>
+        <h3>We Care &amp; Update</h3>
+        <p>GPS tracking, photos, and real-time updates keep you in the loop — watch your pup's adventures unfold in real time.</p>
+      </div>
+      <div class="step ai delay-3">
+        <div class="step-num">04</div>
+        <span class="step-icon">🐕</span>
+        <h3>Happy Pup!</h3>
+        <p>Return home to a happy, exercised, and loved companion. Set up recurring sessions for a seamless routine.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TESTIMONIALS ══════════════ -->
+<section id="testimonials" class="sec">
+  <div class="container">
+    <div class="sec-head center">
+      <span class="sec-tag">Happy Families</span>
+      <h2 class="sec-title ai">What Pet Parents Say</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card ai">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Friendly Paws has been a lifesaver! My golden retriever Max absolutely loves his daily walks. The photo updates are adorable and I always feel at ease knowing he's in safe hands."</p>
+        <div class="testi-author">
+          <div class="t-avatar">👩</div>
+          <div>
+            <div class="t-name">Sarah M.</div>
+            <div class="t-sub">Max's human · Zürich</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card ai delay-1">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Professional, reliable, and genuinely caring. Our two dogs get so excited when they see the Friendly Paws team arrive. GPS tracking gives us total peace of mind."</p>
+        <div class="testi-author">
+          <div class="t-avatar">👨</div>
+          <div>
+            <div class="t-name">Thomas B.</div>
+            <div class="t-sub">Buddy &amp; Luna's dad · Winterthur</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card ai delay-2">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"I was nervous leaving my puppy for the first time but the meet &amp; greet made it so easy. Coco came home happy, full of energy, and already in love with her walker!"</p>
+        <div class="testi-author">
+          <div class="t-avatar">👩‍🦱</div>
+          <div>
+            <div class="t-name">Emma K.</div>
+            <div class="t-sub">Coco's mum · Basel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CTA ══════════════ -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-inner">
+      <h2 class="cta-title ai">Ready for a<br>Happy Pup?</h2>
+      <p class="cta-sub ai delay-1">Book your first walk today and get 20% off.<br>No commitment — cancel anytime.</p>
+      <div class="ai delay-2">
+        <a href="mailto:hello@friendlypaws.ch" class="btn-cta">Book Now — It's Free to Start 🐾</a>
+      </div>
+      <div class="cta-note ai delay-3">
+        <span>No credit card needed</span>
+        <span>Cancel anytime</span>
+        <span>Zürich &amp; surroundings</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">🐾 Friendly Paws</div>
+      <div class="footer-links">
+        <a href="#services">Services</a>
+        <a href="#how">How It Works</a>
+        <a href="#testimonials">Reviews</a>
+        <a href="mailto:hello@friendlypaws.ch">Contact</a>
+      </div>
+      <div class="footer-copy">© 2025 Friendly Paws · Zürich, Switzerland</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════
+   FRIENDLY PAWS — Natural Palette JS
+══════════════════════════════════════════════════ */
+
+// ── Custom cursor ──────────────────────────────
+const cur = document.getElementById('cursor');
+const curR = document.getElementById('cursor-ring');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx+'px'; cur.style.top = my+'px';
+});
+(function tick(){
+  rx += (mx-rx)*0.12; ry += (my-ry)*0.12;
+  curR.style.left = rx+'px'; curR.style.top = ry+'px';
+  requestAnimationFrame(tick);
+})();
+document.querySelectorAll('a,button,.ndot,.s-card,.testi-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    curR.style.width='54px'; curR.style.height='54px';
+    curR.style.borderColor='rgba(192,107,68,0.7)';
+    cur.style.transform='translate(-50%,-50%) scale(0.4)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    curR.style.width='34px'; curR.style.height='34px';
+    curR.style.borderColor='rgba(192,107,68,0.5)';
+    cur.style.transform='translate(-50%,-50%) scale(1)';
+  });
+});
+
+// ── Progress bar ───────────────────────────────
+const pb = document.getElementById('progress-bar');
+window.addEventListener('scroll', ()=>{
+  pb.style.width = (window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+}, {passive:true});
+
+// ── Navbar shrink ──────────────────────────────
+const nb = document.getElementById('navbar');
+window.addEventListener('scroll',()=>nb.classList.toggle('scrolled',window.scrollY>80),{passive:true});
+
+// ── Nav dots ───────────────────────────────────
+const secs = ['hero','services','stats','how','testimonials','cta'];
+const dots = document.querySelectorAll('.ndot');
+dots.forEach(d=>d.addEventListener('click',()=>
+  document.getElementById(d.dataset.target)?.scrollIntoView({behavior:'smooth'})
+));
+function updateDots(){
+  let cur='hero';
+  secs.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && el.getBoundingClientRect().top<=window.innerHeight*0.55) cur=id;
+  });
+  dots.forEach(d=>d.classList.toggle('active',d.dataset.target===cur));
+}
+window.addEventListener('scroll',updateDots,{passive:true});
+
+// ── Intersection observer ──────────────────────
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('vis');
+      if(e.target.classList.contains('stat-n')) counter(e.target);
+    }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.ai,.stat-n[data-target]').forEach(el=>io.observe(el));
+
+// ── Counter animation ──────────────────────────
+function counter(el){
+  if(el._done) return; el._done=true;
+  const target  = parseFloat(el.dataset.target);
+  const decimal = parseInt(el.dataset.decimal||'0');
+  const suffix  = el.dataset.suffix||'';
+  const t0 = performance.now();
+  const dur = 1800;
+  (function tick(now){
+    const p = Math.min((now-t0)/dur,1);
+    const e = 1-Math.pow(1-p,4);
+    el.textContent = (decimal>0 ? (target*e).toFixed(decimal) : Math.floor(target*e)) + suffix;
+    if(p<1) requestAnimationFrame(tick);
+  })(t0);
+}
+
+// ── Hero canvas: paw prints + soft petals ──────
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  function resize(){ canvas.width=canvas.offsetWidth; canvas.height=canvas.offsetHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Draw a paw print
+  function paw(x, y, s, a, angle){
+    ctx.save();
+    ctx.translate(x,y); ctx.rotate(angle);
+    ctx.globalAlpha = a;
+    // main pad
+    ctx.fillStyle = '#C06B44';
+    ctx.beginPath(); ctx.ellipse(0,s*.3,s*.52,s*.4,0,0,Math.PI*2); ctx.fill();
+    // toes
+    [[-s*.48,-s*.18,s*.2,s*.16],[-.16*s,-s*.5,s*.2,s*.16],[.16*s,-s*.5,s*.2,s*.16],[s*.48,-s*.18,s*.2,s*.16]].forEach(([tx,ty,rx,ry])=>{
+      ctx.beginPath(); ctx.ellipse(tx,ty,rx,ry,0,0,Math.PI*2); ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  // Particles: paws + soft blobs
+  const particles = [];
+  for(let i=0;i<22;i++) particles.push({
+    type:'paw', x:Math.random()*1920, y:Math.random()*1080,
+    s:10+Math.random()*18, a:.04+Math.random()*.07,
+    angle:Math.random()*Math.PI*2,
+    vx:(Math.random()-.5)*.15, vy:-.1-Math.random()*.15,
+    va:(Math.random()-.5)*.002
+  });
+  for(let i=0;i<40;i++) particles.push({
+    type:'blob', x:Math.random()*1920, y:Math.random()*1080,
+    r:3+Math.random()*8, a:.03+Math.random()*.07,
+    tw:Math.random()*Math.PI*2,
+    vx:(Math.random()-.5)*.08, vy:(Math.random()-.5)*.08,
+    // pick a palette color
+    col: ['192,107,68','122,173,133','120,152,181','210,180,140'][Math.floor(Math.random()*4)]
+  });
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // soft warm radial glow
+    const g = ctx.createRadialGradient(canvas.width/2,canvas.height*.4,0,canvas.width/2,canvas.height*.4,canvas.width*.55);
+    g.addColorStop(0,'rgba(192,107,68,0.06)');
+    g.addColorStop(.6,'rgba(122,173,133,0.03)');
+    g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach(p=>{
+      if(p.type==='paw'){
+        p.x+=p.vx; p.y+=p.vy; p.angle+=p.va;
+        if(p.y<-60){ p.y=canvas.height+60; p.x=Math.random()*canvas.width; }
+        if(p.x<-60) p.x=canvas.width+60;
+        if(p.x>canvas.width+60) p.x=-60;
+        pa
