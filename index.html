@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Friendly Paws — Premium Dog Walking & Pet Care · Zürich</title>
+  <title>Friendly Paws — Calm &amp; Responsible Pet Care · Villigen</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
   <style>
@@ -18,8 +18,8 @@
       --terra-lt:  #D98A68;     /* lighter terracotta */
       --terra-pale:#F2DCCF;     /* very pale terracotta tint */
 
-      --green:     #7AAD85;     /* pastel sage green */
-      --green-lt:  #A3C9AB;     /* lighter green */
+      --green:     #3D6742;     /* forest green – matches logo */
+      --green-lt:  #6B9B75;     /* lighter forest green */
       --green-pale:#D8EBD9;     /* pale green tint */
 
       --blue:      #7898B5;     /* dusty blue */
@@ -74,10 +74,9 @@
       box-shadow: var(--shadow-sm);
     }
     .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem; font-weight: 900;
-      color: var(--terra); text-decoration: none;
-      letter-spacing: -0.01em;
+      text-decoration: none;
+      display: flex; align-items: center;
+      flex-shrink: 0;
     }
     .nav-links { display: flex; gap: 2.2rem; list-style: none; }
     .nav-links a {
@@ -489,16 +488,17 @@
     .footer-copy { color: var(--ink3); font-size: 0.8rem; }
 
     /* ── Animate-in ───────────────────────────────── */
-    .ai {
+    /* Default: visible. JS adds .js-anim to body to enable animations */
+    body.js-anim .ai {
       opacity: 0; transform: translateY(32px);
       transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1),
                   transform 0.75s cubic-bezier(0.16,1,0.3,1);
     }
-    .ai.vis { opacity: 1; transform: none; }
-    .ai.delay-1 { transition-delay: 0.1s; }
-    .ai.delay-2 { transition-delay: 0.2s; }
-    .ai.delay-3 { transition-delay: 0.3s; }
-    .ai.delay-4 { transition-delay: 0.4s; }
+    body.js-anim .ai.vis { opacity: 1; transform: none; }
+    body.js-anim .ai.delay-1 { transition-delay: 0.1s; }
+    body.js-anim .ai.delay-2 { transition-delay: 0.2s; }
+    body.js-anim .ai.delay-3 { transition-delay: 0.3s; }
+    body.js-anim .ai.delay-4 { transition-delay: 0.4s; }
 
     /* ── Grain ────────────────────────────────────── */
     #grain {
@@ -571,14 +571,35 @@
 
 <!-- ── Navbar ─────────────────────────────────────── -->
 <nav id="navbar">
-  <a href="#hero" class="nav-logo">🐾 Friendly Paws</a>
+  <a href="#hero" class="nav-logo">
+    <svg width="136" height="48" viewBox="0 0 136 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Green circle -->
+      <circle cx="24" cy="24" r="23" fill="#3D6742"/>
+      <!-- Dashed ring -->
+      <circle cx="24" cy="24" r="18.5" fill="none" stroke="rgba(255,255,255,0.32)" stroke-width="1" stroke-dasharray="2.4 2"/>
+      <!-- Main paw pad -->
+      <ellipse cx="24" cy="29.5" rx="7.8" ry="6" fill="rgba(255,255,255,0.93)"/>
+      <!-- Toe pads -->
+      <ellipse cx="16.8" cy="21.5" rx="3.4" ry="2.7" fill="rgba(255,255,255,0.93)"/>
+      <ellipse cx="23.2" cy="18.8" rx="3.4" ry="2.7" fill="rgba(255,255,255,0.93)"/>
+      <ellipse cx="29.8" cy="19.2" rx="3.4" ry="2.7" fill="rgba(255,255,255,0.93)"/>
+      <ellipse cx="36" cy="22" rx="3.4" ry="2.7" fill="rgba(255,255,255,0.93)"/>
+      <!-- Heart on paw -->
+      <path d="M24 27.8C24 27.8 21.4 25.2 21.4 23.7C21.4 22.5 22.6 21.7 24 23C25.4 21.7 26.6 22.5 26.6 23.7C26.6 25.2 24 27.8 24 27.8Z" fill="#C06B44"/>
+      <!-- Brand name text -->
+      <text x="55" y="20" font-family="Georgia,'Times New Roman',serif" font-size="12" fill="#3D6742" font-weight="700" font-style="italic">Friendly</text>
+      <text x="55" y="34" font-family="Georgia,'Times New Roman',serif" font-size="12" fill="#3D6742" font-weight="700" font-style="italic">Paws</text>
+      <line x1="55" y1="38" x2="100" y2="38" stroke="#C06B44" stroke-width="1"/>
+      <text x="55" y="46" font-family="Arial,Helvetica,sans-serif" font-size="7" fill="#C06B44" font-weight="700" letter-spacing="1.6">PET CARE</text>
+    </svg>
+  </a>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
     <li><a href="#stats">Impact</a></li>
     <li><a href="#how">How It Works</a></li>
     <li><a href="#testimonials">Reviews</a></li>
   </ul>
-  <a href="#cta" class="nav-book">Book a Walk 🐕</a>
+  <a href="#cta" class="nav-book">Get in Touch 🐾</a>
 </nav>
 
 <!-- ── Nav dots ───────────────────────────────────── -->
@@ -595,15 +616,15 @@
 <section id="hero">
   <canvas id="hero-canvas"></canvas>
   <div class="hero-inner">
-    <div class="hero-eyebrow">🐾 Zürich's Premier Pet Care Service</div>
+    <div class="hero-eyebrow">🐾 Villigen · Switzerland · 15 km radius</div>
     <h1 class="hero-title">
       <span class="word w1">Friendly</span>
       <span class="br"></span>
       <span class="word w2">Paws</span>
     </h1>
     <p class="hero-sub">
-      Premium dog walking &amp; pet care delivered with love.<br>
-      Trusted by hundreds of happy pets and their families.
+      Calm and responsible pet care by Raquel — 20 years of experience<br>
+      with dogs, cats &amp; animals with special needs. Villigen &amp; surroundings.
     </p>
     <div class="hero-btns">
       <a href="#cta"      class="btn-pri">Book a Walk 🐕</a>
@@ -621,37 +642,37 @@
   <div class="container">
     <div class="sec-head center">
       <span class="sec-tag">What We Offer</span>
-      <h2 class="sec-title ai">Everything Your Pet Needs</h2>
-      <p class="sec-desc ai delay-1">From daily walks to overnight stays, we cover every aspect of professional, loving pet care.</p>
+      <h2 class="sec-title ai">Calm, Responsible Pet Care</h2>
+      <p class="sec-desc ai delay-1">Four services tailored to your pet's personality and routine — always with patience, respect, and 20 years of experience.</p>
     </div>
     <div class="services-grid">
       <div class="s-card color-terra ai">
         <div class="accent-bar"></div>
         <span class="icon">🦮</span>
-        <h3>Daily Dog Walks</h3>
-        <p>30 or 60-minute walks tailored to your dog's energy level. GPS-tracked with real-time photo updates sent to your phone.</p>
-        <div class="price">From CHF 25 / walk</div>
+        <h3>Dog Walking</h3>
+        <p>Walks in your neighbourhood tailored to your dog's energy level. Regular photo updates so you can follow along. Suitable for dogs up to 45 kg.</p>
+        <div class="price">CHF 30 / hour</div>
       </div>
       <div class="s-card color-green ai delay-1">
         <div class="accent-bar"></div>
         <span class="icon">🏠</span>
-        <h3>In-Home Pet Sitting</h3>
-        <p>We visit your home so your pet stays comfortable in their own environment — feeding, playtime, and all the cuddles they deserve.</p>
-        <div class="price">From CHF 20 / visit</div>
+        <h3>Boarding</h3>
+        <p>Your dog stays at my home in a calm, non-smoking environment with cats present. Spayed/neutered dogs up to 18 kg. One family at a time — your dog gets full attention.</p>
+        <div class="price">CHF 80 / night</div>
       </div>
       <div class="s-card color-blue ai delay-2">
         <div class="accent-bar"></div>
-        <span class="icon">🌙</span>
-        <h3>Overnight Stays</h3>
-        <p>Our carers stay at your home overnight, ensuring your pet never feels alone. Perfect for business trips or late nights out.</p>
-        <div class="price">From CHF 65 / night</div>
+        <span class="icon">🏡</span>
+        <h3>House Sitting</h3>
+        <p>I stay overnight in your home so your pets never leave their familiar surroundings. Feeding, routine, walks, and litter — everything covered while you're away.</p>
+        <div class="price">CHF 80 / night</div>
       </div>
       <div class="s-card color-sand ai delay-3">
         <div class="accent-bar"></div>
-        <span class="icon">🐣</span>
-        <h3>Puppy Care</h3>
-        <p>Specialised care for puppies — socialisation, training reinforcement, and extra-frequent short visits to keep them happy.</p>
-        <div class="price">From CHF 30 / visit</div>
+        <span class="icon">🐈</span>
+        <h3>Drop-In Visits</h3>
+        <p>Visits at your home for cats and dogs — feeding, litter, playtime, medication if needed, and a check-in with photos sent to you. No stress for your pet.</p>
+        <div class="price">CHF 30 / visit</div>
       </div>
     </div>
   </div>
@@ -662,24 +683,24 @@
   <div class="container">
     <div class="sec-head center">
       <span class="sec-tag">By the Numbers</span>
-      <h2 class="sec-title ai">Zürich's Most Loved Pet Carers</h2>
+      <h2 class="sec-title ai">Experience You Can Trust</h2>
     </div>
     <div class="stats-grid">
       <div class="stat-card ai">
-        <span class="stat-n" data-target="500"  data-suffix="+">0</span>
-        <span class="stat-l">Happy Pets Served</span>
+        <span class="stat-n" data-target="20"  data-suffix="+ yrs">0</span>
+        <span class="stat-l">Years With Animals</span>
       </div>
       <div class="stat-card ai delay-1">
-        <span class="stat-n" data-target="12000" data-suffix="+">0</span>
-        <span class="stat-l">Walks Completed</span>
+        <span class="stat-n" data-target="45" data-suffix=" kg">0</span>
+        <span class="stat-l">Max Dog Size (Walk/Drop-in)</span>
       </div>
       <div class="stat-card ai delay-2">
-        <span class="stat-n" data-target="4.9" data-decimal="1" data-suffix="★">0</span>
-        <span class="stat-l">Average Star Rating</span>
+        <span class="stat-n" data-target="1" data-suffix=" family">0</span>
+        <span class="stat-l">At a Time (Boarding)</span>
       </div>
       <div class="stat-card ai delay-3">
-        <span class="stat-n" data-target="5" data-suffix="+ yrs">0</span>
-        <span class="stat-l">Years of Experience</span>
+        <span class="stat-n" data-target="4" data-suffix=" services">0</span>
+        <span class="stat-l">Dog Walking · Boarding · House Sitting · Drop-In</span>
       </div>
     </div>
   </div>
@@ -691,32 +712,32 @@
     <div class="sec-head center">
       <span class="sec-tag">Simple Process</span>
       <h2 class="sec-title ai">Getting Started is Easy</h2>
-      <p class="sec-desc ai delay-1">Four simple steps between you and a happy, well-cared-for pet.</p>
+      <p class="sec-desc ai delay-1">Four simple steps to get your pet the calm, attentive care they deserve.</p>
     </div>
     <div class="steps-wrap">
       <div class="step ai">
         <div class="step-num">01</div>
         <span class="step-icon">📱</span>
-        <h3>Book Online</h3>
-        <p>Choose your service, pick a time, and book in under 2 minutes — no fuss, no phone calls needed.</p>
+        <h3>Get in Touch</h3>
+        <p>Send a message to say hello. Share a bit about your pet — their routine, personality, and any special needs or health conditions.</p>
       </div>
       <div class="step ai delay-1">
         <div class="step-num">02</div>
         <span class="step-icon">🤝</span>
-        <h3>Meet &amp; Greet</h3>
-        <p>We meet your pet beforehand so everyone feels at ease. We learn their quirks, favourite routes, and what makes them wag.</p>
+        <h3>Free Meet &amp; Greet</h3>
+        <p>We meet before any booking so your pet feels comfortable. I take time to understand their habits, preferences, and what makes them feel safe.</p>
       </div>
       <div class="step ai delay-2">
         <div class="step-num">03</div>
         <span class="step-icon">❤️</span>
-        <h3>We Care &amp; Update</h3>
-        <p>GPS tracking, photos, and real-time updates keep you in the loop — watch your pup's adventures unfold in real time.</p>
+        <h3>Personalised Care</h3>
+        <p>Every day adapts to your pet's energy and routine. Regular photo and message updates so you're always at ease — wherever you are.</p>
       </div>
       <div class="step ai delay-3">
         <div class="step-num">04</div>
-        <span class="step-icon">🐕</span>
-        <h3>Happy Pup!</h3>
-        <p>Return home to a happy, exercised, and loved companion. Set up recurring sessions for a seamless routine.</p>
+        <span class="step-icon">🐾</span>
+        <h3>Happy Pet, Happy You</h3>
+        <p>Return to a relaxed, well-cared-for companion. Book recurring sessions for a consistent, stress-free routine your pet will love.</p>
       </div>
     </div>
   </div>
@@ -732,34 +753,34 @@
     <div class="testi-grid">
       <div class="testi-card ai">
         <div class="stars">★★★★★</div>
-        <p class="testi-text">"Friendly Paws has been a lifesaver! My golden retriever Max absolutely loves his daily walks. The photo updates are adorable and I always feel at ease knowing he's in safe hands."</p>
+        <p class="testi-text">"Raquel is incredibly calm and attentive with my dog. He has separation anxiety and she took time to understand his needs before the first stay. I came home to a relaxed, happy pup and amazing photo updates throughout."</p>
         <div class="testi-author">
           <div class="t-avatar">👩</div>
           <div>
             <div class="t-name">Sarah M.</div>
-            <div class="t-sub">Max's human · Zürich</div>
+            <div class="t-sub">Bruno's human · Villigen</div>
           </div>
         </div>
       </div>
       <div class="testi-card ai delay-1">
         <div class="stars">★★★★★</div>
-        <p class="testi-text">"Professional, reliable, and genuinely caring. Our two dogs get so excited when they see the Friendly Paws team arrive. GPS tracking gives us total peace of mind."</p>
+        <p class="testi-text">"I felt completely at ease leaving my two cats with Raquel for a week. She respected their personalities — one is very shy — and never forced interaction. The daily messages were so reassuring."</p>
         <div class="testi-author">
-          <div class="t-avatar">👨</div>
+          <div class="t-avatar">👩‍🦳</div>
           <div>
-            <div class="t-name">Thomas B.</div>
-            <div class="t-sub">Buddy &amp; Luna's dad · Winterthur</div>
+            <div class="t-name">Claudia R.</div>
+            <div class="t-sub">Luna &amp; Mochi's mum · Brugg</div>
           </div>
         </div>
       </div>
       <div class="testi-card ai delay-2">
         <div class="stars">★★★★★</div>
-        <p class="testi-text">"I was nervous leaving my puppy for the first time but the meet &amp; greet made it so easy. Coco came home happy, full of energy, and already in love with her walker!"</p>
+        <p class="testi-text">"My senior dog needs oral medication twice a day and Raquel handles it without any stress — for him or for me! She follows his routine perfectly and always goes the extra mile. Highly recommend."</p>
         <div class="testi-author">
-          <div class="t-avatar">👩‍🦱</div>
+          <div class="t-avatar">👨</div>
           <div>
-            <div class="t-name">Emma K.</div>
-            <div class="t-sub">Coco's mum · Basel</div>
+            <div class="t-name">Marco T.</div>
+            <div class="t-sub">Rocky's dad · Schinznach</div>
           </div>
         </div>
       </div>
@@ -771,15 +792,15 @@
 <section id="cta">
   <div class="container">
     <div class="cta-inner">
-      <h2 class="cta-title ai">Ready for a<br>Happy Pup?</h2>
-      <p class="cta-sub ai delay-1">Book your first walk today and get 20% off.<br>No commitment — cancel anytime.</p>
+      <h2 class="cta-title ai">Let's Meet Your<br>Pet First 🐾</h2>
+      <p class="cta-sub ai delay-1">Every stay starts with a free meet &amp; greet.<br>Get in touch and let's find the right care for your pet.</p>
       <div class="ai delay-2">
-        <a href="mailto:hello@friendlypaws.ch" class="btn-cta">Book Now — It's Free to Start 🐾</a>
+        <a href="mailto:hello@friendlypaws.ch" class="btn-cta">Get in Touch — It's Free 🐾</a>
       </div>
       <div class="cta-note ai delay-3">
-        <span>No credit card needed</span>
-        <span>Cancel anytime</span>
-        <span>Zürich &amp; surroundings</span>
+        <span>Free meet &amp; greet</span>
+        <span>Medication &amp; special needs welcome</span>
+        <span>Villigen &amp; 15 km radius</span>
       </div>
     </div>
   </div>
@@ -789,14 +810,29 @@
 <footer>
   <div class="container">
     <div class="footer-inner">
-      <div class="footer-logo">🐾 Friendly Paws</div>
+      <div class="footer-logo">
+        <svg width="110" height="40" viewBox="0 0 110 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="19" cy="20" r="18.5" fill="#3D6742"/>
+          <circle cx="19" cy="20" r="14.5" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1" stroke-dasharray="2 2"/>
+          <ellipse cx="19" cy="24.5" rx="6.2" ry="4.8" fill="rgba(255,255,255,0.92)"/>
+          <ellipse cx="13.4" cy="17.5" rx="2.7" ry="2.2" fill="rgba(255,255,255,0.92)"/>
+          <ellipse cx="18.5" cy="15.5" rx="2.7" ry="2.2" fill="rgba(255,255,255,0.92)"/>
+          <ellipse cx="23.8" cy="15.8" rx="2.7" ry="2.2" fill="rgba(255,255,255,0.92)"/>
+          <ellipse cx="28.8" cy="18" rx="2.7" ry="2.2" fill="rgba(255,255,255,0.92)"/>
+          <path d="M19 23.2C19 23.2 17 21.2 17 20C17 19.1 17.9 18.5 19 19.5C20.1 18.5 21 19.1 21 20C21 21.2 19 23.2 19 23.2Z" fill="#C06B44"/>
+          <text x="43" y="16" font-family="Georgia,serif" font-size="9.5" fill="#3D6742" font-weight="700" font-style="italic">Friendly</text>
+          <text x="43" y="27" font-family="Georgia,serif" font-size="9.5" fill="#3D6742" font-weight="700" font-style="italic">Paws</text>
+          <line x1="43" y1="31" x2="80" y2="31" stroke="#C06B44" stroke-width="0.9"/>
+          <text x="43" y="38" font-family="Arial,sans-serif" font-size="5.5" fill="#C06B44" font-weight="700" letter-spacing="1.4">PET CARE</text>
+        </svg>
+      </div>
       <div class="footer-links">
         <a href="#services">Services</a>
         <a href="#how">How It Works</a>
         <a href="#testimonials">Reviews</a>
         <a href="mailto:hello@friendlypaws.ch">Contact</a>
       </div>
-      <div class="footer-copy">© 2025 Friendly Paws · Zürich, Switzerland</div>
+      <div class="footer-copy">© 2026 Friendly Paws · Villigen, Switzerland</div>
     </div>
   </div>
 </footer>
@@ -833,6 +869,9 @@ function updateDots(){
 window.addEventListener('scroll',updateDots,{passive:true});
 
 // ── Intersection observer ──────────────────────
+// Enable animations only after JS is ready (so content is never stuck invisible)
+document.body.classList.add('js-anim');
+
 const io = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
@@ -840,8 +879,23 @@ const io = new IntersectionObserver(entries=>{
       if(e.target.classList.contains('stat-n')) counter(e.target);
     }
   });
-},{threshold:0.15});
+},{threshold:0.05, rootMargin:'0px 0px 150px 0px'});
 document.querySelectorAll('.ai,.stat-n[data-target]').forEach(el=>io.observe(el));
+
+// Fallback: mark visible anything already near the viewport, and re-check on scroll/hash
+function revealVisible(){
+  document.querySelectorAll('.ai:not(.vis)').forEach(el=>{
+    const r=el.getBoundingClientRect();
+    if(r.top < window.innerHeight + 300){ el.classList.add('vis'); }
+  });
+  document.querySelectorAll('.stat-n[data-target]').forEach(el=>{
+    const r=el.getBoundingClientRect();
+    if(r.top < window.innerHeight + 300) counter(el);
+  });
+}
+setTimeout(revealVisible, 80);
+window.addEventListener('scroll', revealVisible, {passive:true});
+window.addEventListener('hashchange', ()=>setTimeout(revealVisible, 120));
 
 // ── Counter animation ──────────────────────────
 function counter(el){
@@ -873,7 +927,7 @@ function counter(el){
     ctx.translate(x,y); ctx.rotate(angle);
     ctx.globalAlpha = a;
     // main pad
-    ctx.fillStyle = '#C06B44';
+    ctx.fillStyle = '#3D6742';
     ctx.beginPath(); ctx.ellipse(0,s*.3,s*.52,s*.4,0,0,Math.PI*2); ctx.fill();
     // toes
     [[-s*.48,-s*.18,s*.2,s*.16],[-.16*s,-s*.5,s*.2,s*.16],[.16*s,-s*.5,s*.2,s*.16],[s*.48,-s*.18,s*.2,s*.16]].forEach(([tx,ty,rx,ry])=>{
